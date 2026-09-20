@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threads Affiliate AI ダッシュボード</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1d24; --line:#2a2e37; --fg:#e8eaed; --sub:#9aa0aa;
+          --accent:#3ba55d; --danger:#d64545; --warn:#c99a2e; --blue:#3a7afe; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+         background:var(--bg); color:var(--fg); padding-bottom:60px; }
+  header { padding:16px; position:sticky; top:0; background:var(--bg); border-bottom:1px solid var(--line); z-index:10;}
+  h1 { font-size:18px; margin:0; }
+  .sub { color:var(--sub); font-size:12px; }
+  .wrap { padding:12px 16px; max-width:720px; margin:0 auto; }
+  .kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px; }
+  .kpi .v { font-size:20px; font-weight:700; }
+  .kpi .l { font-size:11px; color:var(--sub); }
+  h2 { font-size:14px; color:var(--sub); margin:20px 0 8px; text-transform:uppercase; letter-spacing:.05em;}
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; }
+  .row { display:flex; gap:12px; }
+  .thumb { width:72px; height:72px; border-radius:10px; object-fit:cover; background:#222; flex:0 0 auto;}
+  .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; margin-right:6px;}
+  .b-aff { background:#123; color:#8bd; } .b-val{background:#132; color:#8d9;}
+  .b-con { background:#231; color:#dc9;} .b-exp{background:#312; color:#d99;}
+  .scores { font-size:12px; color:var(--sub); margin:8px 0; }
+  .scores b { color:var(--fg); }
+  .body { white-space:pre-wrap; font-size:14px; line-height:1.5; background:#12141a;
+          border:1px solid var(--line); border-radius:10px; padding:10px; margin:8px 0;}
+  .name { font-size:13px; color:var(--sub); }
+  .price { font-weight:700; }
+  .actions { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:10px; }
+  button, .btn { border:none; border-radius:10px; padding:12px; font-size:15px; font-weight:600;
+          color:#fff; cursor:pointer; width:100%; }
+  .approve { background:var(--accent); grid-column:1 / -1; font-size:17px; padding:14px;}
+  .reject { background:var(--danger); } .postpone{ background:var(--warn); }
+  .edit { background:var(--blue); }
+  details summary { cursor:pointer; color:var(--blue); font-size:13px; margin-top:6px; }
+  textarea { width:100%; min-height:120px; background:#12141a; color:var(--fg);
+             border:1px solid var(--line); border-radius:10px; padding:8px; font-size:14px;}
+  a { color:var(--blue); word-break:break-all; font-size:12px;}
+  .empty { color:var(--sub); font-size:13px; padding:8px 0;}
+  .flag { color:var(--warn); font-size:12px; }
+  form { margin:0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🤖 Threads Affiliate AI 社員チーム</h1>
+  <div class="sub">{{ report.date }} ・ AUTO_PUBLISH={{ settings.auto_publish }} ・ 承認待ち {{ pending|length }}件</div>
+</header>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi"><div class="v">¥{{ "{:,.0f}".format(report.revenue) }}</div><div class="l">本日の売上</div></div>
+    <div class="kpi"><div class="v">¥{{ "{:,.0f}".format(report.revenue_yesterday) }}</div><div class="l">昨日</div></div>
+    <div class="kpi"><div class="v">¥{{ "{:,.0f}".format(report.revenue_month) }}</div><div class="l">今月</div></div>
+    <div class="kpi"><div class="v">{{ report.clicks }}</div><div class="l">クリック</div></div>
+    <div class="kpi"><div class="v">{{ report.conversions }}</div><div class="l">成約</div></div>
+    <div class="kpi"><div class="v">{{ report.posts_published }}</div><div class="l">本日投稿</div></div>
+    <div class="kpi"><div class="v" style="font-size:14px">{{ report.best_category }}</div><div class="l">Topカテゴリ</div></div>
+    <div class="kpi"><div class="v" style="font-size:14px">{{ report.best_hook }}</div><div class="l">Top Hook</div></div>
+    <div class="kpi"><div class="v" style="font-size:13px">{{ report.best_product[:12] }}</div><div class="l">Top商品</div></div>
+  </div>
+
+  <div class="card" style="background:#161a22">
+    <b>📈 明日の戦略</b>
+    <div class="scores" style="margin-top:6px">{{ report.tomorrow_strategy }}</div>
+  </div>
+
+  <h2>承認待ち ({{ pending|length }})</h2>
+  {% if not pending %}<div class="empty">承認待ちの投稿はありません。パイプラインを実行してください。</div>{% endif %}
+  {% for c in pending %}
+  {% set p = products.get(c.product_id) %}
+  <div class="card">
+    <div>
+      <span class="badge {{ {'affiliate':'b-aff','value':'b-val','conversation':'b-con','experiment':'b-exp'}[c.post_type] }}">{{ c.post_type }}</span>
+      <span class="badge" style="background:#222;color:#aaa">{{ c.hook_type }}</span>
+      <span class="badge" style="background:#222;color:#aaa">案{{ c.variant }}</span>
+    </div>
+    <div class="row" style="margin-top:10px">
+      {% if p and p.image_url %}<img class="thumb" src="{{ p.image_url }}" alt="">{% endif %}
+      <div style="flex:1">
+        {% if p %}
+        <div class="name">{{ p.name[:60] }}</div>
+        <div class="price">¥{{ "{:,.0f}".format(p.price) }} ・ ★{{ p.review_average }} ({{ p.review_count }}件) ・ {{ p.shop_name }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="body">{{ c.body }}</div>
+    <div class="scores">
+      AI Score <b>{{ "%.0f"|format(c.ai_score) }}</b> ・
+      Compliance <b>{{ "%.0f"|format(c.compliance_score) }}</b> ・
+      類似度 <b>{{ "%.2f"|format(c.similarity_score) }}</b>
+      {% if c.scheduled_time %} ・ 投稿予定 {{ c.scheduled_time.strftime("%H:%M") }}{% endif %}
+    </div>
+    {% if c.compliance_score < settings.min_compliance_score %}
+      <div class="flag">⚠ Compliance {{ settings.min_compliance_score }}未満 — 修正が必要</div>
+    {% endif %}
+    {% if c.similarity_score > settings.copy_similarity_threshold %}
+      <div class="flag">⚠ 類似度が高い — 再生成/修正推奨</div>
+    {% endif %}
+    {% if c.reference_trend %}<div class="scores">参考トレンド: {{ c.reference_trend }}</div>{% endif %}
+    {% if c.affiliate_url %}<a href="{{ c.affiliate_url }}" target="_blank">{{ c.affiliate_url }}</a>{% endif %}
+
+    <form action="/candidate/{{ c.id }}/action" method="post">
+      <input type="hidden" name="action" value="approve">
+      <div class="actions">
+        <button class="approve" type="submit">✅ 承認</button>
+      </div>
+    </form>
+    <div class="actions">
+      <form action="/candidate/{{ c.id }}/action" method="post">
+        <input type="hidden" name="action" value="reject">
+        <button class="reject" type="submit">🗑 却下</button>
+      </form>
+      <form action="/candidate/{{ c.id }}/action" method="post">
+        <input type="hidden" name="action" value="postpone">
+        <button class="postpone" type="submit">🕒 後で</button>
+      </form>
+    </div>
+    <details>
+      <summary>✏️ 修正して承認</summary>
+      <form action="/candidate/{{ c.id }}/action" method="post">
+        <input type="hidden" name="action" value="edit">
+        <textarea name="body">{{ c.body }}</textarea>
+        <button class="edit" type="submit" style="margin-top:8px">修正して承認</button>
+      </form>
+    </details>
+  </div>
+  {% endfor %}
+
+  <h2>承認済み・投稿予定 ({{ approved|length }})</h2>
+  {% for c in approved %}
+  <div class="card">
+    <span class="badge b-aff">{{ c.post_type }}</span>
+    {% if c.scheduled_time %}<span class="sub">{{ c.scheduled_time.strftime("%m/%d %H:%M") }}</span>{% endif %}
+    <div class="body">{{ c.body }}</div>
+    <button class="edit" onclick="publishNow({{ c.id }})">今すぐ投稿</button>
+  </div>
+  {% else %}<div class="empty">なし</div>{% endfor %}
+
+  <h2>本日投稿済み ({{ published_today|length }})</h2>
+  {% for p in published_today %}
+  <div class="card"><span class="badge b-val">{{ p.post_type }}</span>
+    <div class="body">{{ p.body }}</div>
+    <div class="sub">{{ p.published_at.strftime("%H:%M") }} ・ id={{ p.threads_post_id }}</div>
+  </div>
+  {% else %}<div class="empty">なし</div>{% endfor %}
+</div>
+
+<script>
+async function publishNow(id){
+  if(!confirm("今すぐ投稿しますか？")) return;
+  const r = await fetch("/publish-now/"+id, {method:"POST"});
+  const j = await r.json();
+  alert("投稿しました: "+JSON.stringify(j.published));
+  location.reload();
+}
+</script>
+</body>
+</html>
