@@ -125,16 +125,28 @@ class ChiefManager(BaseAgent):
         return focus, budget
 
     def _posting_times(self, composition_total: int) -> List[str]:
-        # spread across the day respecting MIN_POST_INTERVAL_MINUTES
-        interval = max(settings.min_post_interval_minutes, 30)
-        start = dt.datetime.combine(dt.date.today(), dt.time(hour=10))
+        # spread across the day within the posting window (first_post_hour..last_post_hour)
+        first = settings.first_post_hour
+        last = max(first + 1, settings.last_post_hour)
+        start = dt.datetime.combine(dt.date.today(), dt.time(hour=first))
+        end = dt.datetime.combine(dt.date.today(), dt.time(hour=last))
+
+        if composition_total <= 1:
+            return [start.strftime("%H:%M")]
+
+        # even spacing across the window, but never tighter than MIN_POST_INTERVAL
+        window_min = (end - start).total_seconds() / 60
+        spacing = max(
+            settings.min_post_interval_minutes,
+            window_min / (composition_total - 1) if composition_total > 1 else window_min,
+        )
         times: List[str] = []
         cur = start
         for _ in range(composition_total):
             times.append(cur.strftime("%H:%M"))
-            cur += dt.timedelta(minutes=interval)
-            if cur.hour >= 23:
-                cur = cur.replace(hour=22, minute=0)
+            cur += dt.timedelta(minutes=spacing)
+            if cur > end:
+                cur = end
         return times
 
     def _rationale(self, comp: Dict[str, int], focus: List[str]) -> str:

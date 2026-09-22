@@ -57,6 +57,17 @@ def test_compliance_flags_missing_pr():
     assert good.passed
 
 
+def test_posting_window_starts_at_8am():
+    from app.agents.chief_manager import ChiefManager
+    from app.config import settings
+
+    times = ChiefManager()._posting_times(10)
+    assert times[0] == f"{settings.first_post_hour:02d}:00"  # 毎朝8時から
+    assert len(times) == 10
+    # last post no later than the configured window end
+    assert int(times[-1].split(":")[0]) <= settings.last_post_hour
+
+
 def test_compliance_flags_fake_experience():
     officer = ComplianceOfficer()
     res = officer.check(

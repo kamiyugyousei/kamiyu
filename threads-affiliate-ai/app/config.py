@@ -52,15 +52,23 @@ class Settings(BaseSettings):
     copy_similarity_threshold: float = 0.80
     min_exploration_ratio: float = 0.20
 
+    # Posting window (posts are staggered between these hours, local time)
+    first_post_hour: int = 8
+    last_post_hour: int = 22
+
+    # When the app starts, auto-generate today's candidates if none exist yet
+    # (so a double-click gives you candidates ready to approve).
+    generate_on_startup: bool = True
+
     # Browser
     browser_enabled: bool = False
     browser_headless: bool = True
 
     # Scheduler
     cron_daily_research: str = "06:00"
-    cron_keyword_discovery: str = "07:00"
-    cron_product_matching: str = "08:00"
-    cron_content_generation: str = "09:00"
+    cron_keyword_discovery: str = "06:30"
+    cron_product_matching: str = "06:45"
+    cron_content_generation: str = "07:00"  # candidates ready before 08:00 posting
     cron_daily_analysis: str = "23:00"
     cron_strategy_update: str = "00:00"
 

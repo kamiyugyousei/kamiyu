@@ -22,6 +22,37 @@ def _start_scheduler() -> None:
     if _scheduler is None:
         _scheduler = build_scheduler()
         _scheduler.start()
+    if settings.generate_on_startup:
+        _maybe_generate_today()
+
+
+def _maybe_generate_today() -> None:
+    """If there are no candidates for today yet, generate them in the background
+    so a double-click launch leaves you with posts ready to approve."""
+    import datetime as dt
+    import threading
+
+    def _run() -> None:
+        from app.database import session_scope
+        from app.models import PostCandidate
+        from app.services.pipeline import run_daily_pipeline
+
+        today = dt.date.today().isoformat()
+        try:
+            with session_scope() as db:
+                exists = (
+                    db.query(PostCandidate)
+                    .filter(PostCandidate.strategy_date == today)
+                    .first()
+                )
+                if exists:
+                    return
+                run_daily_pipeline(db)
+        except Exception:
+            # never crash startup because of generation
+            pass
+
+    threading.Thread(target=_run, daemon=True).start()
 
 
 @app.on_event("shutdown")

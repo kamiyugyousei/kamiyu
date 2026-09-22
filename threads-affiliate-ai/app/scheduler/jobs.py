@@ -42,16 +42,15 @@ def job_strategy_update() -> None:
 def build_scheduler() -> BackgroundScheduler:
     sched = BackgroundScheduler(timezone="Asia/Tokyo")
 
-    # 06:00-09:00 combined into one pipeline run (research→...→content) at content time
+    # Research→...→content generation early, so candidates are ready to approve
+    # BEFORE the posting window opens (default 07:00, posting starts 08:00).
     ch, cm = _hm(settings.cron_content_generation)
     sched.add_job(job_daily_pipeline, CronTrigger(hour=ch, minute=cm), id="daily_pipeline")
 
-    # publish approved posts every N minutes (staggering handled inside publish_due)
-    sched.add_job(
-        job_publish_due,
-        CronTrigger(minute=f"*/{max(settings.min_post_interval_minutes, 5)}"),
-        id="publish_due",
-    )
+    # Check for approved posts to publish every 10 minutes. Posts are scheduled
+    # from first_post_hour (08:00); publish_due enforces MIN_POST_INTERVAL spacing,
+    # so this only fires each post once its scheduled time arrives.
+    sched.add_job(job_publish_due, CronTrigger(minute="*/10"), id="publish_due")
 
     ah, am = _hm(settings.cron_daily_analysis)
     sched.add_job(job_daily_analysis, CronTrigger(hour=ah, minute=am), id="daily_analysis")
