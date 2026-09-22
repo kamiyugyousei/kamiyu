@@ -49,7 +49,8 @@ pytest -q
 ```
 
 ## ドキュメント
-- 自分のPCで動かす手順: [`SETUP.md`](SETUP.md)
+- 無料で使う（PC運用・ダブルクリック起動）: [`FREE.md`](FREE.md) ← お金をかけたくない人向け
+- 自分のPCで動かす手順（詳細）: [`SETUP.md`](SETUP.md)
 - 24時間サーバーに設置（自動運転）: [`DEPLOY.md`](DEPLOY.md)
 - 全体設計: [`architecture.md`](architecture.md)
 - AI社員の役割/入出力/禁止事項: [`AGENTS.md`](AGENTS.md)
