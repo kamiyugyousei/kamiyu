@@ -4,6 +4,8 @@
 """
 from __future__ import annotations
 
+import os
+
 import uvicorn
 
 from app.config import settings
@@ -32,10 +34,12 @@ def _stop_scheduler() -> None:
 
 def main() -> None:
     init_db()
+    # Hosting platforms (Render, Railway, Fly, Heroku...) inject the port via $PORT.
+    port = int(os.environ.get("PORT", settings.dashboard_port))
     uvicorn.run(
         "app.main:app",
         host=settings.dashboard_host,
-        port=settings.dashboard_port,
+        port=port,
         reload=False,
     )
 

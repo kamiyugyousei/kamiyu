@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import datetime as dt
 import os
+import secrets
 from typing import Optional
 
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 from sqlalchemy.orm import Session
 
 from app.agents import GrowthManager
@@ -22,6 +25,38 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 app = FastAPI(title="Threads Affiliate AI - 承認ダッシュボード")
 
 
+class BasicAuthMiddleware(BaseHTTPMiddleware):
+    """HTTP Basic auth for public deployments. Active only when a password is set.
+    /healthz is always open so hosting health checks keep working."""
+
+    async def dispatch(self, request: Request, call_next):
+        pwd = settings.dashboard_password
+        if not pwd or request.url.path == "/healthz":
+            return await call_next(request)
+
+        header = request.headers.get("Authorization", "")
+        if header.startswith("Basic "):
+            import base64
+
+            try:
+                decoded = base64.b64decode(header[6:]).decode("utf-8")
+                user, _, passwd = decoded.partition(":")
+                if secrets.compare_digest(user, settings.dashboard_user) and secrets.compare_digest(
+                    passwd, pwd
+                ):
+                    return await call_next(request)
+            except Exception:
+                pass
+        return Response(
+            status_code=401,
+            headers={"WWW-Authenticate": 'Basic realm="Threads Affiliate AI"'},
+            content="Unauthorized",
+        )
+
+
+app.add_middleware(BasicAuthMiddleware)
+
+
 @app.on_event("startup")
 def _startup() -> None:
     init_db()
@@ -29,6 +64,12 @@ def _startup() -> None:
 
 def _today() -> dt.date:
     return dt.date.today()
+
+
+@app.get("/healthz")
+def healthz():
+    """Health check for hosting platforms."""
+    return {"status": "ok"}
 
 
 @app.get("/", response_class=HTMLResponse)

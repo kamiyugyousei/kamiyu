@@ -1,0 +1,57 @@
+# Render.com blueprint — 24時間稼働の常時サーバー設定
+# 使い方: Render で "New +" → "Blueprint" → このリポジトリを選ぶと自動で読まれます。
+# 秘密情報(APIキー)は sync:false にしてあり、このファイルには保存されません。
+# → デプロイ時に Render の画面で入力します。
+
+services:
+  - type: web
+    name: threads-affiliate-ai
+    runtime: python
+    rootDir: threads-affiliate-ai
+    # 24時間止めない & 永続ディスクを使うには starter 以上が必要(無料プランは休眠&データ消滅)
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m app.main
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.5"
+      # --- SQLiteを永続ディスクに置く ---
+      - key: DATABASE_URL
+        value: sqlite:////var/data/threads_ai.db
+      # --- 安全設定(初期はこのまま) ---
+      - key: AUTO_PUBLISH
+        value: "false"
+      - key: TARGET_POSTS_PER_DAY
+        value: "10"
+      - key: MAX_AFFILIATE_POSTS_PER_DAY
+        value: "4"
+      - key: MIN_POST_INTERVAL_MINUTES
+        value: "60"
+      - key: MIN_AFFILIATE_SCORE
+        value: "70"
+      - key: MIN_COMPLIANCE_SCORE
+        value: "90"
+      - key: COPY_SIMILARITY_THRESHOLD
+        value: "0.80"
+      # --- 秘密情報: Renderの画面で入力(ファイルには保存されない) ---
+      - key: RAKUTEN_APPLICATION_ID
+        sync: false
+      - key: RAKUTEN_AFFILIATE_ID
+        sync: false
+      # ダッシュボードのパスワード(公開URLを守る。必ず設定推奨)
+      - key: DASHBOARD_USER
+        sync: false
+      - key: DASHBOARD_PASSWORD
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: THREADS_ACCESS_TOKEN
+        sync: false
+      - key: THREADS_USER_ID
+        sync: false
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1

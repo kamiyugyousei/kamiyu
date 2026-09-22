@@ -67,6 +67,10 @@ class Settings(BaseSettings):
     # Dashboard
     dashboard_host: str = "0.0.0.0"
     dashboard_port: int = 8000
+    # Optional Basic-Auth lock for public deployments. When password is set,
+    # every page except /healthz requires this user/password.
+    dashboard_user: str = "admin"
+    dashboard_password: str = ""
 
     # --- Derived / capability flags ---
     @property

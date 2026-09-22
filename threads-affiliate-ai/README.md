@@ -48,7 +48,9 @@ python -m app.services.simulate
 pytest -q
 ```
 
-## アーキテクチャ / エージェント仕様
+## ドキュメント
+- 自分のPCで動かす手順: [`SETUP.md`](SETUP.md)
+- 24時間サーバーに設置（自動運転）: [`DEPLOY.md`](DEPLOY.md)
 - 全体設計: [`architecture.md`](architecture.md)
 - AI社員の役割/入出力/禁止事項: [`AGENTS.md`](AGENTS.md)
 - 進捗: [`TODO.md`](TODO.md)
