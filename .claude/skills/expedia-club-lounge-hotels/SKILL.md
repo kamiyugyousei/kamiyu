@@ -14,6 +14,7 @@ description: エクスペディア（Expedia MCP の search_hotels）で指定�
 2. 日付: ユーザー指定がなければ「今日+30日」から3泊。大人2名（デフォルト）。
 3. 検索（`limit: 20`、`offset: 0` と `offset: 20` の2回、必要なら `property_themes: ["LUXURY_PROPERTY"]` でもう1回）。
    - `destination` は `"Jakarta, Indonesia"` のように英語「City, Country」。
+   - 島・地方名（例: セブ島）は広域検索になり高級ホテルが埋もれる。主要エリアごとに分けて検索する（セブ島なら `"Lapu-Lapu, Philippines"`＝マクタン島リゾート と `"Cebu City, Philippines"`＝市街地）。
    - **注意**: `user_location` や改行入り `query_text` を渡すと `Unknown error` になることがある。エラー時は `destination` / `check_in_date` / `check_out_date` / `limit` / `offset` の最小構成で再試行する。
 4. 重複を除き、下記の判定基準でクラブラウンジのあるホテルを抽出。
 5. 結果を表で出す（下記フォーマット）。
@@ -39,3 +40,6 @@ description: エクスペディア（Expedia MCP の search_hotels）で指定�
 ## 参考: ジャカルタ（2026-10 検索時）
 Expedia の結果に出たラウンジ付き: Grand Hyatt Jakarta（Grand Club）、The Langham Jakarta（Langham Club）、InterContinental Jakarta Pondok Indah（Club InterContinental）、Pullman Jakarta Central Park（Executive Lounge）、Gran Meliá Jakarta（The Level）、Pan Pacific Jakarta（Pacific Club）、DoubleTree by Hilton Jakarta Diponegoro（Executive Lounge）。
 結果外の候補: Shangri-La Jakarta、Fairmont Jakarta、JW Marriott Jakarta、The Ritz-Carlton Jakarta（Mega Kuningan / Pacific Place）、The Westin Jakarta、Sheraton Grand Jakarta Gandaria City、Pullman Jakarta Indonesia Thamrin。
+
+## 参考: セブ島（2026-10 検索時）
+ラウンジ付き: Shangri-La Mactan（Ocean Wing Club Lounge）、Sheraton Cebu Mactan Resort（Club Lounge）、Radisson Blu Cebu（Executive Lounge）、Marco Polo Plaza Cebu（Continental Club）。要確認: Dusit Thani Mactan、Mövenpick Mactan、Crimson Mactan、NUSTAR、Fili。
