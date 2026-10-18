@@ -1,0 +1,340 @@
+<meta charset="utf-8">
+<title>まだ終われない MV</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+/* Layout: one stage column — the film on top, transport under it, a timeline of the lyric cues, then the export desk. Single dark "live stage at dusk" look. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0a1e;
+  --panel: #16143a;
+  --line: #2c2862;
+  --ink: #f4f1ff;
+  --muted: #a8a2d8;
+  --pink: #ff3e8a;
+  --teal: #3ff0e6;
+  --warn: #ffb36b;
+  --f-display: 'Dela Gothic One', 'Hiragino Kaku Gothic StdN', 'Noto Sans JP', sans-serif;
+  --f-body: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  --f-num: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@font-face { font-family: 'Dela'; src: url(data:font/woff2;base64,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) format('woff2'); }
+html { background: var(--bg); }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 22px; }
+header { display: grid; gap: 4px; }
+.eyebrow { font-family: var(--f-num); font-size: 12px; letter-spacing: 0.14em; color: var(--teal); text-transform: uppercase; }
+h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(30px, 6vw, 52px); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 span { color: var(--pink); }
+.lede { color: var(--muted); margin: 0; max-width: 62ch; }
+
+.stage { position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: #000; }
+#c { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; background: #000; }
+
+.transport { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.transport input[type=range] { flex: 1 1 220px; min-width: 0; accent-color: var(--pink); }
+.time { font-family: var(--f-num); font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+
+button, select {
+  font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 6px; padding: 9px 16px; cursor: pointer;
+}
+button:hover:not(:disabled), select:hover { border-color: var(--muted); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+button:disabled { opacity: 0.5; cursor: default; }
+.primary { background: var(--pink); border-color: var(--pink); color: #fff; font-weight: 700; padding: 11px 22px; }
+.primary:hover:not(:disabled) { border-color: #fff; }
+
+.cues { display: grid; grid-template-columns: 1fr 1.5fr 1.5fr 1fr; gap: 3px; }
+.cue { text-align: left; padding: 8px 10px; display: grid; gap: 1px; min-width: 0; border-radius: 4px; }
+.cue small { font-family: var(--f-num); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cue b { font-weight: 700; font-size: 14px; overflow-wrap: anywhere; }
+.cue.on { border-color: var(--pink); }
+
+.desk { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: grid; gap: 14px; }
+.desk h2 { font-family: var(--f-display); font-weight: 400; font-size: 22px; margin: 0; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+label { color: var(--muted); font-size: 13px; }
+.bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--teal)); transition: width 0.1s linear; }
+.status { margin: 0; min-height: 1.7em; font-size: 14px; }
+.status.err { color: var(--warn); }
+.result { display: grid; gap: 10px; }
+.result video { width: 100%; max-width: 480px; border-radius: 6px; border: 1px solid var(--line); }
+.note { color: var(--muted); font-size: 13px; margin: 0; }
+
+@media (max-width: 560px) {
+  .cues { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">J-rock lyric motion · 5 sec · 1920×1080 · 30fps</div>
+    <h1>まだ<span>終われない</span></h1>
+    <p class="lede">ギターを弾きながら歌うオリジナルキャラクターの5秒MVです。下のボタンで、この端末のブラウザ上でMP4に書き出して保存できます。</p>
+  </header>
+
+  <div class="stage">
+    <canvas id="c" width="1920" height="1080" aria-label="MVのプレビュー"></canvas>
+    <div class="loading" id="loading">読み込み中…</div>
+  </div>
+
+  <div class="transport">
+    <button id="play" type="button" disabled>▶ 再生</button>
+    <input id="scrub" type="range" min="0" max="149" step="1" value="129" aria-label="再生位置">
+    <span class="time" id="time">4.30 / 5.00 秒</span>
+  </div>
+
+  <div class="cues" role="group" aria-label="歌詞のタイミング">
+    <button class="cue" type="button" data-t="0.4"><small>0.0–1.0s</small><b>構え・息を吸う</b></button>
+    <button class="cue" type="button" data-t="1.6"><small>1.0–2.5s</small><b>「鳴らせ」</b></button>
+    <button class="cue" type="button" data-t="3.3"><small>2.5–4.0s</small><b>「この声が届くまで」</b></button>
+    <button class="cue" type="button" data-t="4.3"><small>4.0–5.0s</small><b>「まだ終われない」</b></button>
+  </div>
+
+  <section class="desk" aria-labelledby="exp">
+    <h2 id="exp">MP4に書き出す</h2>
+    <div class="row">
+      <label for="quality">画質</label>
+      <select id="quality">
+        <option value="1080">1920×1080（フルHD）</option>
+        <option value="720">1280×720（軽量）</option>
+      </select>
+      <button id="export" class="primary" type="button" disabled>書き出す</button>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <p class="status" id="status" role="status">準備ができたら「書き出す」を押してください。</p>
+    <div class="result" id="result" hidden>
+      <video id="out" controls playsinline></video>
+      <div class="row">
+        <button id="save" class="primary" type="button">MP4を保存</button>
+        <span class="note" id="size"></span>
+      </div>
+    </div>
+    <p class="note">書き出しはこの端末の中だけで行われ、どこにも送信されません。Chrome・Edge・Safariの最新版で動きます（端末の性能により、数十秒から数分かかります。書き出し中はこのタブを開いたままにしてください）。</p>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.js"></script>
+<script src="engine.js" charset="utf-8"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const FRAMES = Math.round(DUR * FPS);
+  let audioBuf = null, actx = null, playing = false, src = null, blob = null, busy = false;
+
+  const fmt = t => `${t.toFixed(2)} / ${DUR.toFixed(2)} 秒`;
+  function show(f) {
+    f = Math.max(0, Math.min(FRAMES - 1, f));
+    render(f / FPS);
+    $('scrub').value = f; $('time').textContent = fmt(f / FPS);
+    document.querySelectorAll('.cue').forEach(c => {
+      const t = f / FPS, a = +c.dataset.t;
+      const [s, e] = a < 1 ? [0, 1] : a < 2.5 ? [1, 2.5] : a < 4 ? [2.5, 4] : [4, 5];
+      c.classList.toggle('on', t >= s && t < e);
+    });
+  }
+  const status = (msg, err) => { $('status').textContent = msg; $('status').classList.toggle('err', !!err); };
+  const progress = u => { $('bar').style.width = `${Math.round(u * 100)}%`; };
+
+  async function loadAudio() {
+    const ab = await (await fetch('audio.wav')).arrayBuffer();
+    const off = new OfflineAudioContext(2, 44100, 44100);
+    audioBuf = await off.decodeAudioData(ab);
+  }
+  async function resample(rate) {
+    const n = Math.round(DUR * rate);
+    const off = new OfflineAudioContext(2, n, rate);
+    const s = off.createBufferSource(); s.buffer = audioBuf; s.connect(off.destination); s.start();
+    return off.startRendering();
+  }
+
+  // ----- preview playback -----
+  function stop() {
+    playing = false; $('play').textContent = '▶ 再生';
+    if (src) { try { src.stop(); } catch (e) {} src = null; }
+  }
+  async function play() {
+    if (playing) { stop(); return; }
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    await actx.resume();
+    const from = +$('scrub').value >= FRAMES - 1 ? 0 : +$('scrub').value / FPS;
+    src = actx.createBufferSource(); src.buffer = audioBuf; src.connect(actx.destination);
+    const t0 = actx.currentTime + 0.05 - from; src.start(actx.currentTime + 0.05, from);
+    playing = true; $('play').textContent = '❚❚ 停止';
+    const tick = () => {
+      if (!playing) return;
+      const t = actx.currentTime - t0;
+      if (t >= DUR) { stop(); show(FRAMES - 1); return; }
+      show(Math.max(0, Math.round(t * FPS)));
+      requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
+  // ----- export -----
+  async function pickVideo(w, h) {
+    // H.264 plays everywhere; VP9 is the fallback for browsers built without it.
+    for (const [kind, codec] of [['avc', 'avc1.640028'], ['avc', 'avc1.4d0028'], ['avc', 'avc1.42e028'], ['vp9', 'vp09.00.40.08']]) {
+      const cfg = { codec, width: w, height: h, bitrate: w > 1280 ? 14e6 : 8e6, framerate: FPS };
+      try { if ((await VideoEncoder.isConfigSupported(cfg)).supported) return { kind, cfg }; } catch (e) {}
+    }
+    return null;
+  }
+  async function pickAudio() {
+    if (!('AudioEncoder' in window)) return null;
+    for (const [kind, codec, rate] of [['aac', 'mp4a.40.2', 44100], ['aac', 'mp4a.40.2', 48000], ['opus', 'opus', 48000]]) {
+      const cfg = { codec, sampleRate: rate, numberOfChannels: 2, bitrate: 192000 };
+      try { if ((await AudioEncoder.isConfigSupported(cfg)).supported) return { kind, cfg }; } catch (e) {}
+    }
+    return null;
+  }
+  const yieldUI = () => new Promise(r => setTimeout(r, 0));
+
+  async function exportWebCodecs(w, h) {
+    const vsel = await pickVideo(w, h);
+    if (!vsel) return null;
+    const vcfg = vsel.cfg;
+    const acfg = await pickAudio();
+    const target = new Mp4Muxer.ArrayBufferTarget();
+    const muxer = new Mp4Muxer.Muxer({
+      target, fastStart: 'in-memory', firstTimestampBehavior: 'offset',
+      video: { codec: vsel.kind, width: w, height: h, frameRate: FPS },
+      audio: acfg ? { codec: acfg.kind, numberOfChannels: 2, sampleRate: acfg.cfg.sampleRate } : undefined,
+    });
+    let failure = null;
+    const venc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: e => { failure = e; } });
+    venc.configure(vcfg);
+    const out = w === cv.width ? cv : Object.assign(document.createElement('canvas'), { width: w, height: h });
+    const octx = out === cv ? null : out.getContext('2d');
+    for (let f = 0; f < FRAMES; f++) {
+      if (failure) throw failure;
+      render(f / FPS);
+      if (octx) octx.drawImage(cv, 0, 0, w, h);
+      const frame = new VideoFrame(out, { timestamp: Math.round(f * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+      venc.encode(frame, { keyFrame: f % FPS === 0 });
+      frame.close();
+      while (venc.encodeQueueSize > 6) await new Promise(r => setTimeout(r, 4));
+      progress(0.9 * (f + 1) / FRAMES);
+      status(`フレームを描いています… ${f + 1} / ${FRAMES}`);
+      await yieldUI();
+    }
+    await venc.flush(); venc.close();
+    if (acfg) {
+      status('音声を書き出しています…');
+      const buf = await resample(acfg.cfg.sampleRate);
+      const aenc = new AudioEncoder({ output: (c, m) => muxer.addAudioChunk(c, m), error: e => { failure = e; } });
+      aenc.configure(acfg.cfg);
+      const CH = 4096, n = buf.length, L = buf.getChannelData(0), R = buf.getChannelData(1);
+      for (let i = 0; i < n; i += CH) {
+        const m = Math.min(CH, n - i), data = new Float32Array(m * 2);
+        data.set(L.subarray(i, i + m), 0); data.set(R.subarray(i, i + m), m);
+        const ad = new AudioData({ format: 'f32-planar', sampleRate: acfg.cfg.sampleRate, numberOfFrames: m, numberOfChannels: 2, timestamp: Math.round(i * 1e6 / acfg.cfg.sampleRate), data });
+        aenc.encode(ad); ad.close();
+      }
+      await aenc.flush(); aenc.close();
+      if (failure) throw failure;
+    }
+    muxer.finalize();
+    progress(1);
+    return { blob: new Blob([target.buffer], { type: 'video/mp4' }), ext: 'mp4', audio: !!acfg, vp9: vsel.kind === 'vp9' };
+  }
+
+  // Fallback for browsers without WebCodecs: record the canvas in real time.
+  async function exportRealtime() {
+    if (!cv.captureStream || !window.MediaRecorder) return null;
+    const type = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'].find(t => MediaRecorder.isTypeSupported(t));
+    if (!type) return null;
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    await actx.resume();
+    const dest = actx.createMediaStreamDestination();
+    const s = actx.createBufferSource(); s.buffer = audioBuf; s.connect(dest);
+    const stream = new MediaStream([...cv.captureStream(FPS).getVideoTracks(), ...dest.stream.getAudioTracks()]);
+    const rec = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 12e6 });
+    const parts = []; rec.ondataavailable = e => e.data.size && parts.push(e.data);
+    const done = new Promise(r => rec.onstop = r);
+    render(0); rec.start(); const t0 = actx.currentTime + 0.05; s.start(t0);
+    await new Promise(resolve => {
+      const tick = () => {
+        const t = actx.currentTime - t0;
+        if (t >= DUR) { resolve(); return; }
+        render(Math.max(0, t)); progress(Math.max(0, t) / DUR);
+        status(`リアルタイムで録画しています… ${Math.max(0, t).toFixed(1)} 秒`);
+        requestAnimationFrame(tick);
+      };
+      tick();
+    });
+    rec.stop(); await done; progress(1);
+    return { blob: new Blob(parts, { type }), ext: type.startsWith('video/mp4') ? 'mp4' : 'webm', audio: true };
+  }
+
+  async function doExport() {
+    if (busy) return;
+    busy = true; stop();
+    $('export').disabled = $('play').disabled = true; $('result').hidden = true; progress(0);
+    const [w, h] = $('quality').value === '720' ? [1280, 720] : [1920, 1080];
+    try {
+      let res = null;
+      if ('VideoEncoder' in window && window.Mp4Muxer) res = await exportWebCodecs(w, h);
+      if (!res) res = await exportRealtime();
+      if (!res) { status('このブラウザは動画の書き出しに対応していません。Chrome・Edge・Safariの最新版で開いてください。', true); return; }
+      blob = res.blob; blob.ext = res.ext; blob.h = h;
+      $('out').src = URL.createObjectURL(blob);
+      $('size').textContent = `${res.ext.toUpperCase()} · ${(blob.size / 1048576).toFixed(1)} MB${res.audio ? '' : ' · 音声なし（このブラウザは音声の書き出しに未対応）'}${res.vp9 ? ' · VP9形式（iPhoneの写真アプリでは再生できない場合があります）' : ''}`;
+      $('result').hidden = false;
+      status('書き出しが終わりました。「MP4を保存」で端末に保存できます。');
+      save();
+    } catch (e) {
+      console.error(e);
+      status(`書き出しに失敗しました（${e && e.message || e}）。画質を「軽量」にして、もう一度試してください。`, true);
+    } finally {
+      busy = false; $('export').disabled = $('play').disabled = false; show(+$('scrub').value);
+    }
+  }
+
+  async function save() {
+    if (!blob) return;
+    const filename = `madaowarenai_mv_${blob.h}p.${blob.ext}`;
+    let dl = null;
+    try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) {}
+    if (dl) {
+      try { await dl.save({ filename, data: blob }); status('保存しました。'); }
+      catch (e) {
+        const c = e && e.code;
+        if (c === 'declined') status('保存をキャンセルしました。「MP4を保存」でもう一度保存できます。');
+        else if (c === 'rate_limited') status('保存の確認画面がすでに開いています。少し待ってから「MP4を保存」を押してください。', true);
+        else status('この画面からは保存できません。上の動画のメニュー（⋮ や右クリック）から保存してください。', true);
+      }
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = $('out').src; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    status('保存を開始しました。保存されない場合は、上の動画のメニュー（⋮ や右クリック）から保存してください。');
+  }
+
+  $('play').addEventListener('click', play);
+  $('export').addEventListener('click', doExport);
+  $('save').addEventListener('click', save);
+  $('scrub').addEventListener('input', () => { stop(); show(+$('scrub').value); });
+  document.querySelectorAll('.cue').forEach(c => c.addEventListener('click', () => { stop(); show(Math.round(+c.dataset.t * FPS)); }));
+
+  Promise.all([window.ready, loadAudio()]).then(() => {
+    $('loading').hidden = true;
+    $('play').disabled = $('export').disabled = false;
+    show(129);
+  }).catch(e => {
+    $('loading').textContent = '読み込みに失敗しました。ページを再読み込みしてください。';
+    console.error(e);
+  });
+})();
+</script>
