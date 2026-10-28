@@ -1,22 +1,26 @@
 # kamiyu
 
-## MEO順位チェッカー (`meo_rank.py`)
+## MEO順位チェック（Claude Code スキル `meo-rank`）
 
-Google Places API (New) の Text Search で、指定した地点・キーワードで店舗が何位に出るかを格子状に測り、CSV とヒートマップ (HTML) を出力します。Python 標準ライブラリのみで動きます。
+Google Places API (New) で、指定した地点の周りに格子状の地点を置き、各地点で店舗が何位に出るかを測ります。結果はヒートマップ・CSV・まとめ画像で出力します。
 
+### Claude Code で使う
+環境変数 `GOOGLE_PLACES_API_KEY` を設定して、こう頼むだけで動きます。
+> 「〇〇事務所のMEO順位を測って」
+> 「西宮北口 美容室で上位10店のヒートマップを作って」
+
+手順や料金区分は `.claude/skills/meo-rank/SKILL.md` に書いてあります。
+
+### コマンドで直接使う
 ```bash
-export GOOGLE_PLACES_API_KEY=xxxx
-
-# 1) 対象店舗の place_id を調べる（店名などを取得するため有料SKU。無料枠内で数回だけ）
-python3 meo_rank.py find "店名 渋谷"
-
-# 2) 5×5地点・500m間隔で順位を測る（IDのみ取得 = IDs Only SKU）
-python3 meo_rank.py rank "渋谷 美容室" --lat 35.658 --lng 139.7016 \
-  --target ChIJ自店 --label 自店 --target ChIJ競合 --label 競合A
-# → meo_rank.csv / meo_rank.html
+S=.claude/skills/meo-rank/scripts/meo_rank.py
+python3 $S find "店名 地名"                                   # place_id と座標
+python3 $S rank "西宮 行政書士" --lat 34.7585 --lng 135.3591 \
+  --spacing 1000 --radius 1000 --target ChIJ... --label 自店 --out results/kw1
+python3 $S top "西宮 行政書士" --lat 34.7585 --lng 135.3591     # 競合の一覧
+python3 $S report --title "MEO順位" --card "results/kw1.csv:ChIJ...:「西宮 行政書士」" --out results/report
 ```
 
-- 順位チェックは `places.id` だけを取得するため、IDs Only SKU（無料枠の上限なし）で動きます。利用前に公式の料金表で最新の条件を確認してください。
-- 1地点につき最大3リクエスト（20件×3ページ = 60位まで）。61位以下は「圏外」になります。
+- `rank` は `places.id` だけを取得するので、無料枠の上限がない区分（IDs Only）で動きます。最新の料金表で確認してください。
 - 順位は API の並び順に基づく**目安**です。実際の Google マップの表示は、検索する人の位置や履歴で変わります。
-- 予算アラートと API の割り当て上限を設定しておくと安心です。
+- 出力は `results/` に置きます（Git の管理対象外）。
