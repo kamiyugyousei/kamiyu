@@ -1,0 +1,9 @@
+{
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00_Inbox",
+  "attachmentFolderPath": "99_Attachments",
+  "alwaysUpdateLinks": true,
+  "useMarkdownLinks": false,
+  "showLineNumber": true,
+  "promptDelete": true
+}

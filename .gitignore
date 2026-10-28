@@ -1,0 +1,15 @@
+# Obsidian: 端末ごとに変わる状態ファイル（コンフリクトの原因になるので同期しない）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/cache
+.trash/
+
+# コミュニティプラグイン本体は各端末でインストールする（設定 data.json だけ共有）
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/manifest.json
+.obsidian/plugins/*/styles.css
+
+# OS
+.DS_Store
+Thumbs.db
